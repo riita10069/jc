@@ -8,10 +8,7 @@ import (
 	. "github.com/riita10069/jc/util"
 )
 
-func matPrint(X mat.Matrix) {
-	fa := mat.Formatted(X, mat.Prefix(""), mat.Squeeze())
-	fmt.Printf("%v\n", fa)
-}
+
 
 func main() {
 	vec1 := Vector{}
@@ -29,5 +26,5 @@ func main() {
 	fmt.Print(min_vector.Value)
 	A := mat.NewDense(size, size, vectors.HammingMatrix())
 	fmt.Print(size)
-	matPrint(A)
+	MatPrint(A)
 }

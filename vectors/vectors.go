@@ -2,6 +2,7 @@ package vectors
 
 import (
 	. "github.com/riita10069/jc/vector"
+	. "github.com/riita10069/jc/util"
 )
 
 type Vectors struct {
@@ -28,31 +29,8 @@ func (v *Vectors) HammingMatrixDecode(recieve Vector) Vector {
 		j := vector.HammingDistance(recieve)
 		tmp = append(tmp, j)
 	}
-	_, num := min(tmp)
+	_, num := Min(tmp)
 	return v.Values[num]
 }
 
-func max(a []float64) (float64, int) {
-	max := a[0]
-	num := 0
-	for i, v := range a {
-		if v < max {
-			max = v
-			num = i
-		}
-	}
-	return max, num
-}
-
-func min(a []float64) (float64, int) {
-	min := a[0]
-	num := 0
-	for i, v := range a {
-		if v < min {
-			min = v
-			num = i
-		}
-	}
-	return min, num
-}
 
