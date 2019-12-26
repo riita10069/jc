@@ -1,4 +1,4 @@
-module github.com/kadai/jc
+module github.com/riita10069/jc
 
 go 1.13
 
