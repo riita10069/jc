@@ -4,6 +4,10 @@ type Vector struct {
 	Value []float64
 }
 
+func NewVector(value []float64) Vector {
+	return Vector{Value: value}
+}
+
 func (v *Vector) HammingDistance(other Vector) float64 {
 	var humming_distance float64 = 0
 	for i, value := range v.Value {
@@ -14,6 +18,6 @@ func (v *Vector) HammingDistance(other Vector) float64 {
 	return humming_distance
 }
 
-func (v *Vector) getLength() int {
+func (v *Vector) GetLength() int {
 	return len(v.Value)
 }

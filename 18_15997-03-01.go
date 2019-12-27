@@ -1,30 +1,38 @@
+//␣プログラミング言語：golang
+//␣コンパイル方法：env go build -o [ビルド後のファイル名] [ファイル名]
+//␣実行方法：./[ビルド後のファイル名]
+
 package main
 
 import (
 	"fmt"
-	"gonum.org/v1/gonum/mat"
-	. "github.com/riita10069/jc/vector"
-	. "github.com/riita10069/jc/vectors"
+	"strings"
+
 	. "github.com/riita10069/jc/util"
+	. "github.com/riita10069/jc/vector"
 )
 
-
-
 func main() {
-	vec1 := Vector{}
-	vec2 := Vector{}
-	vec1.Value = []float64{1, 0, 0, 1, 0}
-	vec2.Value = []float64{0, 0, 0, 0, 0}
+	var a int
+	fmt.Print("INPUT LENGTH:")
+	fmt.Scan(&a)
 
-	vectors := Vectors{}
-	vectors.Values = []Vector{vec1, vec2}
-	size := vectors.Size()
+	var c1 string
+	fmt.Print("c1=")
+	fmt.Scan(&c1)
 
-	recieve := Vector{}
-	recieve.Value = []float64{1, 1, 1, 0, 1}
-	min_vector := vectors.HammingMatrixDecode(recieve)
-	fmt.Print(min_vector.Value)
-	A := mat.NewDense(size, size, vectors.HammingMatrix())
-	fmt.Print(size)
-	MatPrint(A)
+	var c2 string
+	fmt.Print("c2=")
+	fmt.Scan(&c2)
+
+	C1 := strings.Split(c1, "")
+	C2 := strings.Split(c2, "")
+
+	c_1 := NewVector(StringToFloat64(C1))
+	c_2 := NewVector(StringToFloat64(C2))
+
+	distance := c_1.HammingDistance(c_2)
+
+	fmt.Println("OUTPUT:")
+	fmt.Print(distance)
 }

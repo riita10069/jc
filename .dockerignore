@@ -1,0 +1,15 @@
+Dockerfile
+.dockerignore
+.git
+
+.idea
+.vscode
+.DS_Store
+cloud_sql_proxy
+
+*.swp
+
+venv
+deployment.yml
+
+.circleci

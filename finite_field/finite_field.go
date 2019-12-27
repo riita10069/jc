@@ -1,25 +1,37 @@
 package finite_field
 
 import (
-	"errors"
-	. "github.com/riita10069/jc/numerical"
+	"math"
+
 	. "github.com/riita10069/jc/number"
+	. "github.com/riita10069/jc/numerical"
+	"gonum.org/v1/gonum/mat"
 )
 
-
-
 type FiniteNumberField struct {
-	prime    int
-	numbers  []Number
+	prime   int
+	numbers []Number
 }
 
 type IFiniteField interface {
+	Size() [][]int
 	AddTable() [][]int
-	SubTable()
-	MulTable()
-	DivTable()
+	SubTable() [][]int
+	MulTable() [][]int
+	DivTable() [][]interface{}
 }
 
+func (f FiniteNumberField) Size() int {
+	return f.prime
+}
+
+func (f FiniteNumberField) LinearEquation(A *mat.Dense, B *mat.Dense) *mat.Dense {
+	AInverse := mat.NewDense(A.RowView(0).Len(), A.ColView(0).Len(), nil)
+	AInverse.Inverse(A)
+	C := mat.NewDense(AInverse.RowView(0).Len(), B.ColView(0).Len(), nil)
+	C.Product(AInverse, B)
+	return C
+}
 
 func (f FiniteNumberField) AddTable() [][]int {
 	matrix := make([][]int, f.Size(), f.Size())
@@ -31,7 +43,7 @@ func (f FiniteNumberField) AddTable() [][]int {
 	return matrix
 }
 
-func (f FiniteNumberField) SubTable()[][]int {
+func (f FiniteNumberField) SubTable() [][]int {
 	matrix := make([][]int, f.Size(), f.Size())
 	for i := range make([]int, f.Size(), f.Size()) {
 		for j := range make([]int, f.Size(), f.Size()) {
@@ -41,7 +53,7 @@ func (f FiniteNumberField) SubTable()[][]int {
 	return matrix
 }
 
-func (f FiniteNumberField) MulTable() [][]int{
+func (f FiniteNumberField) MulTable() [][]int {
 	matrix := make([][]int, f.Size(), f.Size())
 	for i := range make([]int, f.Size(), f.Size()) {
 		for j := range make([]int, f.Size(), f.Size()) {
@@ -51,7 +63,7 @@ func (f FiniteNumberField) MulTable() [][]int{
 	return matrix
 }
 
-func (f FiniteNumberField) DivTable()[][]interface{} {
+func (f FiniteNumberField) DivTable() [][]interface{} {
 	matrix := make([][]interface{}, f.Size(), f.Size())
 	for i := range make([]int, f.Size(), f.Size()) {
 		for j := range make([]int, f.Size(), f.Size()) {
@@ -64,15 +76,51 @@ func (f FiniteNumberField) DivTable()[][]interface{} {
 	return matrix
 }
 
-
 type FiniteNumericalField struct {
-	prime int
+	prime Poly
 	polys []Poly
 }
 
-
-func main()  {
-	a := FiniteNumberField{}
-	a.MulTable()
+func (f FiniteNumericalField) Size() int {
+	return int(math.Pow(2.0, float64(f.prime.Deg())))
 }
 
+func (f FiniteNumericalField) AddTable() [][]Poly {
+	matrix := make([][]Poly, f.Size(), f.Size())
+	for i := range make([]int, f.Size(), f.Size()) {
+		for j := range make([]int, f.Size(), f.Size()) {
+			matrix[i][j] = PolyAdd(f.polys[i], f.polys[j])
+		}
+	}
+	return matrix
+}
+
+func (f FiniteNumericalField) SubTable() [][]Poly {
+	matrix := make([][]Poly, f.Size(), f.Size())
+	for i := range make([]int, f.Size(), f.Size()) {
+		for j := range make([]int, f.Size(), f.Size()) {
+			matrix[i][j] = PolySub(f.polys[i], f.polys[j])
+		}
+	}
+	return matrix
+}
+
+func (f FiniteNumericalField) MulTable() [][]Poly {
+	matrix := make([][]Poly, f.Size(), f.Size())
+	for i := range make([]int, f.Size(), f.Size()) {
+		for j := range make([]int, f.Size(), f.Size()) {
+			matrix[i][j] = PolyMul(f.polys[i], f.polys[j])
+		}
+	}
+	return matrix
+}
+
+func (f FiniteNumericalField) DivTable() [][]interface{} {
+	matrix := make([][]interface{}, f.Size(), f.Size())
+	for i := range make([]int, f.Size(), f.Size()) {
+		for j := range make([]int, f.Size(), f.Size()) {
+			matrix[i][j], _ = PolyDiv(f.polys[i], f.polys[j])
+		}
+	}
+	return matrix
+}
