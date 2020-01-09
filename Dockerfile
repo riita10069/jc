@@ -1,20 +1,7 @@
-FROM asia.gcr.io/lc-dev-01/go-build:0.0.3 as builder
-
-COPY ./ $GOPATH/src/github.com/riita10069/
-RUN cd $GOPATH/src/github.com/riita10069/jc && go build
-
-
-FROM alpine:latest
-
-RUN apk add --no-cache ca-certificates tzdata
-
-ENV GOPATH=/go
-
-RUN mkdir -p $GOPATH/src/github.com/riita10069/jc
-WORKDIR $GOPATH/src/github.com/riita10069/jc
-
-COPY --from=builder $GOPATH/src/github.com/riita10069/jc/jc jc
-
-RUN chmod +x lc-servejc
-
-CMD ["./jc"]
+FROM golang:latest
+ENV GOPATH /go
+ENV PATH $PATH:$GOPATH/bin
+RUN mkdir -p /go/src/github.com/riita10069/jc
+COPY . /go/src/github.com/riita10069/jc
+WORKDIR /go/src/github.com/riita10069/jc
+ENV GO111MODULE=on

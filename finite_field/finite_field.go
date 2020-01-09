@@ -13,6 +13,10 @@ type FiniteNumberField struct {
 	numbers []Number
 }
 
+func NewFiniteNumberField(prime int, numbers []Number) *FiniteNumberField {
+	return &FiniteNumberField{prime: prime, numbers: numbers}
+}
+
 type IFiniteField interface {
 	Size() [][]int
 	AddTable() [][]int
@@ -35,19 +39,32 @@ func (f FiniteNumberField) LinearEquation(A *mat.Dense, B *mat.Dense) *mat.Dense
 
 func (f FiniteNumberField) AddTable() [][]int {
 	matrix := make([][]int, f.Size(), f.Size())
+	for k := range make([]int, f.Size()){
+		matrix[k] = make([]int, f.Size())
+	}
+
 	for i := range make([]int, f.Size(), f.Size()) {
 		for j := range make([]int, f.Size(), f.Size()) {
 			matrix[i][j] = f.numbers[i].Add(&f.numbers[j])
 		}
 	}
+
+
+
 	return matrix
 }
 
 func (f FiniteNumberField) SubTable() [][]int {
 	matrix := make([][]int, f.Size(), f.Size())
+	for k := range make([]int, f.Size()){
+		matrix[k] = make([]int, f.Size())
+	}
 	for i := range make([]int, f.Size(), f.Size()) {
 		for j := range make([]int, f.Size(), f.Size()) {
 			matrix[i][j] = f.numbers[i].Sub(&f.numbers[j])
+			if matrix[i][j] < 0 {
+				matrix[i][j] += f.prime
+			}
 		}
 	}
 	return matrix
@@ -55,6 +72,9 @@ func (f FiniteNumberField) SubTable() [][]int {
 
 func (f FiniteNumberField) MulTable() [][]int {
 	matrix := make([][]int, f.Size(), f.Size())
+	for k := range make([]int, f.Size()){
+		matrix[k] = make([]int, f.Size())
+	}
 	for i := range make([]int, f.Size(), f.Size()) {
 		for j := range make([]int, f.Size(), f.Size()) {
 			matrix[i][j] = f.numbers[i].Mul(&f.numbers[j])
@@ -65,6 +85,9 @@ func (f FiniteNumberField) MulTable() [][]int {
 
 func (f FiniteNumberField) DivTable() [][]interface{} {
 	matrix := make([][]interface{}, f.Size(), f.Size())
+	for k := range make([]interface{}, f.Size()){
+		matrix[k] = make([]interface{}, f.Size())
+	}
 	for i := range make([]int, f.Size(), f.Size()) {
 		for j := range make([]int, f.Size(), f.Size()) {
 			matrix[i][j], _ = f.numbers[i].Div(&f.numbers[j])
@@ -79,6 +102,10 @@ func (f FiniteNumberField) DivTable() [][]interface{} {
 type FiniteNumericalField struct {
 	prime Poly
 	polys []Poly
+}
+
+func NewFiniteNumericalField(prime Poly, polys []Poly) *FiniteNumericalField {
+	return &FiniteNumericalField{prime: prime, polys: polys}
 }
 
 func (f FiniteNumericalField) Size() int {

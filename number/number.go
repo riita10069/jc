@@ -7,6 +7,10 @@ type Number struct {
 	number int
 }
 
+func NewNumber(prime int, number int) Number {
+	return Number{prime: prime, number: number}
+}
+
 type IElement interface {
 	Add()
 	Sub()
@@ -31,7 +35,7 @@ func (f *Number) Div(other *Number) (int, error) {
 		return -1, errors.New("(*>△<)<0 で割っちゃダメだよ！！")
 	}
 	for i := range make([]int, f.prime, f.prime) {
-		if other.number*i == f.number {
+		if (other.number * i) %f.prime == f.number {
 			return i, nil
 		}
 	}
